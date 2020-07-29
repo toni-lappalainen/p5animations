@@ -4,15 +4,16 @@ let song;
 let fft;
 
 function setup() {
-  createCanvas(800, 600);
+  createCanvas(windowWidth, windowHeight);
   fill('white');
   noStroke();
 }
 
-
+/*
 function preload() {
   song = loadSound('');
 }
+*/
 
 var col = {
   r: 255,
