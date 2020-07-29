@@ -3,33 +3,49 @@ let snowflakes = []; // array to hold snowflake objects
 let song;
 let fft;
 
+
+function preload() {
+  song = loadSound('song.mp3');
+}
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   fill('white');
   noStroke();
+  fft = new p5.FFT(0.9, 128);
+  song.play();
 }
 
-/*
-function preload() {
-  song = loadSound('');
-}
-*/
 
-var col = {
+let col = {
   r: 255,
   g: 0,
   b: 0
 };
 
+let x = 0;
+let speed = 0;
+let changedSize = 0;
+
 function draw() {
+  let spectrum = fft.analyze();
+  if (x < 10)
+    console.log(spectrum);
+  x++
+
   background('black');
   let t = frameCount / 60; // update time
   
-  col.r = random(0, 255)
-  col.g = 0
-  col.b = random(0,255)
+  col.r = random(0, 20) +spectrum[15];
+  col.g = 0+spectrum[50]+spectrum[65]+20;
+  col.b = random(0, 20)+ spectrum[25]+spectrum[45]+spectrum[50]+spectrum[65]+spectrum[60]+spectrum[70]+spectrum[40]+20;
+  col.a = 130 + spectrum[70]+spectrum[60];
+  speed = spectrum[50] / 10;
+  changedSize = spectrum[50] / 10;
+  //console.log(col.r, col.b);
   
-  fill(col.r, col.g, col.b, 255);
+  fill(col.r, col.g, col.b, col.a);
 
   // create a random number of snowflakes each frame
   for (let i = 0; i < random(5); i++) {
@@ -49,7 +65,7 @@ function snowflake() {
   this.posX = 0;
   this.posY = random(-50, 0);
   this.initialangle = random(0, 2 * PI);
-  this.size = random(2, 5);
+  this.size = random(2, 6);
 
   // radius of snowflake spiral
   // chosen so the snowflakes are uniformly spread out in area
